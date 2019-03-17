@@ -4,7 +4,7 @@ using namespace std;
 
 class QINT
 {
-private: 
+private:
 	unsigned int data[4];
 public:
 	QINT();
@@ -13,6 +13,7 @@ public:
 	string DecToBin(QINT x);
 	QINT BinToDec(string bit);
 	string BinToHex(string bit);
+	QINT BinToDecUnsigned(string bit);
 	string DecToHex(QINT x);
 	const QINT operator+(const QINT&) const;
 	const QINT operator-(const QINT&) const;
@@ -32,4 +33,6 @@ public:
 	const QINT operator>>(QINT x) const;	//dich phai 2	
 	const QINT operator<<(int x) const;		//dich trai 1
 	const QINT operator<<(QINT x) const;	//dich trai 2
+	void DBit(QINT &x, string &bin);
+	void BBit(QINT &x, string &bin);
 };
