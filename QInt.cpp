@@ -58,6 +58,7 @@ void QINT::PrintQInt()
 	}
 	cout << result << endl;
 }
+
 /////////////////
 void QINT::DBit(QINT &x, string &bin)
 {
@@ -121,7 +122,7 @@ QINT QINT::BinToDecUnsigned(string bin)
 {
 	this->data[0] = this->data[1] = this->data[2] = this->data[3] = 0;
 	string dec;
-	dec = BinUnsigned(bin);
+	dec = FromBinToUnsignedInt(bin);
 	BBit(*this, bin);
 	return *this;
 }

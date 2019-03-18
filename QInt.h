@@ -15,24 +15,24 @@ public:
 	string BinToHex(string bit);
 	QINT BinToDecUnsigned(string bit);
 	string DecToHex(QINT x);
-	const QINT operator+(const QINT&) const;
-	const QINT operator-(const QINT&) const;
-	const QINT operator*(const QINT&) const;
-	const QINT operator/(const QINT&) const;
-	bool operator<(const QINT&) const;
-	bool operator>(const QINT&) const;
-	bool operator==(const QINT&) const;
-	bool operator>=(const QINT&) const;
-	bool operator<=(const QINT&) const;
-	bool operator=(const QINT&) const;
-	const QINT operator&(const QINT&) const;
-	const QINT operator|(const QINT&) const;
-	const QINT operator^(const QINT&) const;
-	const QINT operator~() const;
-	const QINT operator>>(int x) const;		//dich phai 1
-	const QINT operator>>(QINT x) const;	//dich phai 2	
-	const QINT operator<<(int x) const;		//dich trai 1
-	const QINT operator<<(QINT x) const;	//dich trai 2
+	QINT operator+(const QINT&);
+	QINT operator-(const QINT&);
+	QINT operator*(const QINT&);
+	QINT operator/(const QINT&);
+	bool operator<(const QINT&);
+	bool operator>(const QINT&);
+	bool operator==(const QINT&);
+	bool operator>=(const QINT&);
+	bool operator<=(const QINT&);
+	bool operator=(const QINT&);
+	QINT operator&(const QINT&);
+	QINT operator|(const QINT&);
+	QINT operator^(const QINT&);
+	QINT operator~();
+	QINT operator>>(int x);		//dich phai 1
+	QINT operator>>(QINT x);	//dich phai 2	
+	QINT operator<<(int x);		//dich trai 1
+	QINT operator<<(QINT x);	//dich trai 2
 	void DBit(QINT &x, string &bin);
 	void BBit(QINT &x, string &bin);
 };

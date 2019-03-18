@@ -160,7 +160,7 @@ string PowWithBase2(int n)	//2^n
 
 string FromBinToDec(string bin)
 {
-	string result = "";
+	string result = "0";
 	if (bin[0] == '1')	//số âm
 	{
 		//trừ đi 1
@@ -203,9 +203,9 @@ string FromBinToDec(string bin)
 	return result;
 }
 //////////////////////////////////////////
-string BinUnsigned(string &bin)
+string FromBinToUnsignedInt(string &bin)
 {
-	string result = "";
+	string result = "0";
 	int len = bin.length();
 	if (bin.length() < 128)
 	{
@@ -221,14 +221,20 @@ string BinUnsigned(string &bin)
 	}
 	return result;
 }
+
 string Cut2Char(string dec)
 {
+	if (dec.length() < 2)
+	{
+		return dec;
+	}
 	string result = "00";
 	result[0] = dec[0];
 	result[1] = dec[1];
 	return result;
 }
-int StringToInt(string strNumber)
+
+int FromStringToInt(string strNumber)
 {
 	int inNumber = 0;
 	for (int i = 0; i < strNumber.length(); i++)
@@ -237,7 +243,8 @@ int StringToInt(string strNumber)
 	}
 	return inNumber;
 }
-string InToString(int inNumber)
+
+string FromIntToString(int inNumber)
 {
 	string strNumber;
 	if (inNumber == 0) return "0";
@@ -250,7 +257,8 @@ string InToString(int inNumber)
 	reverse(strNumber.begin(), strNumber.end());
 	return strNumber;
 }
-string DiviceBy16(string dec, string &remain)
+
+string DivideBy16(string dec, string &remain)
 {
 	if ((dec.length() == 1) || (dec.length() == 2 && dec[1] - '0' < 6 && dec[0] == '1'))
 	{
@@ -259,11 +267,11 @@ string DiviceBy16(string dec, string &remain)
 	}
 	string result;
 	int idx = 1;
-	int number = StringToInt(Cut2Char(dec));
+	int number = FromStringToInt(Cut2Char(dec));
 	if (dec.length() == 2)
 	{
 		result.push_back((number / 16) + '0');
-		remain = InToString(number % 16);
+		remain = FromIntToString(number % 16);
 		return result;
 	}
 	while (idx != dec.length() - 1)
@@ -273,15 +281,20 @@ string DiviceBy16(string dec, string &remain)
 		result.push_back((number / 16) + '0');
 		number = number % 16;
 	}
-	remain = InToString(number);
+	remain = FromIntToString(number);
 	return result;
 }
+
 string FromDecToHex(string dec)
 {
 	string result = "", remain;
+	if (dec == "0")
+	{
+		result = "0";
+	}
 	while (dec != "0")
 	{
-		dec = DiviceBy16(dec, remain);
+		dec = DivideBy16(dec, remain);
 		if (remain.length() == 2)
 		{
 			string flag = "A";
