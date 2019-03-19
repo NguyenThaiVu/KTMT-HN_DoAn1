@@ -1,16 +1,19 @@
-#include<iostream>
-using namespace std;
-#include<string>
+#ifndef _QFLOAT_H_
+#define _QFLOAT_H_
+
+#include "ThuVien.h"
 
 class QFLOAT
 {
 private:
-	bool sign;
-	unsigned short exponent;
-	unsigned int fraction[4];
+	unsigned int data[4];
 public:
+	QFLOAT();
 	void ScanQFloat();
 	void PrintQFloat();
-	QFLOAT BinToDec(bool *bit);
-	string DecToBin(QFLOAT x);
+	
+	QFLOAT BinToDec(string _128bit);
+	string DecToBin();
 };
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef _QInt_H_
+#define  _QInt_H_
+
 #include<iostream>
 using namespace std;
 #include<string>
@@ -33,3 +36,4 @@ public:
 	const QINT operator<<(int x) const;		//dich trai 1
 	const QINT operator<<(QINT x) const;	//dich trai 2
 };
+#endif // !_QInt_H_

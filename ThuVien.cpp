@@ -53,7 +53,7 @@ string FromDecToBin(string number)
 		result = "0" + result;
 	}
 	//neu la so am, chuyen thanh so bu 2
-	if (sign == 1)	
+	if (sign == 1)
 	{
 		//chuyen bit 0->1 và 1->0
 		for (int i = 0; i < result.length(); i++)
@@ -149,7 +149,7 @@ string PowWithBase2(int n)	//2^n
 {
 	if (n == 0)
 		return "1";
-	string result="2";	//base case 
+	string result = "2";	//base case 
 	for (int i = 0; i < n - 1; i++)
 	{
 		result = MultipltWith2(result);
@@ -170,7 +170,7 @@ string FromBinToDec(string bin)
 				bin[i] = '0';
 				break;
 			}
-			else if (bin[i] == '0' && bin[i-1]=='0')
+			else if (bin[i] == '0' && bin[i - 1] == '0')
 			{
 				bin[i] = '1';
 			}
@@ -196,6 +196,122 @@ string FromBinToDec(string bin)
 		if (bin[i] == '1')
 		{
 			result = SumOfTwoNumber(result, PowWithBase2(127 - i));
+		}
+	}
+	return result;
+}
+
+
+
+//*************** for QFloat
+
+string MultiplyBignumWithSmallnum(string bignum, int smallnum)
+{
+	string c;
+	int carry = 0, s;
+	for (int i = bignum.length() - 1; i >= 0; i--)
+	{
+		s = (bignum[i] - 48)*smallnum + carry;
+		carry = s / 10;
+		c = (char)(s % 10 + 48) + c;
+	}
+	string temp;
+	if (carry > 0)
+		temp = to_string(carry);
+	return temp + c;
+}
+
+string ConvertFractionalPart_FromDecToBin(string number)
+{
+	string result;
+	int count = 0;
+	while (!number.empty())
+	{
+		if (number[0] >= '5')
+		{
+			result = result + '1';
+			number = MultipltWith2(number);
+			number.erase(0, 1);// xóa số 1 đầu chuỗi
+		}
+		else
+		{
+			result = result + '0';
+			number = MultipltWith2(number);
+		}
+
+		// giới hạn Max Lenght cho chuỗi nhị phân chứa phần thập phân.		
+		count++;
+		if (count == 16383)
+			break;
+
+		//xóa các số 0 vô nghĩa
+		for (int i = number.length() - 1; i >= 0; i--)
+		{
+			if (number[i] == '0')
+				number.pop_back();
+			else
+				break;
+		}
+	}
+	return result;
+
+}
+
+bool IsEqualWithZero(string number)
+{
+	for (int i = 0; i < number.length(); i++)
+	{
+		if (number[i] != '0')
+			return false;
+	}
+	return true;
+}
+
+unsigned int BinaryToDecimal(string n)
+{
+	string num = n;
+	unsigned int decValue = 0;
+
+	unsigned int base = 1;
+
+	int len = num.length();
+	for (int i = len - 1; i >= 0; i--)
+	{
+		if (num[i] == '1')
+			decValue += base;
+		base = base * 2;
+	}
+
+	return decValue;
+}
+
+string BinToDec_Of_FractionalPart(string fractionalPart)
+{
+	string result("0");
+	string temp("1");
+	for (int i = 0; i < fractionalPart.length(); i++)
+	{
+		int exp = -(i + 1);
+		temp = MultiplyBignumWithSmallnum(temp, 5);
+		
+		string zeropadding0(-exp - temp.length(), '0');
+		temp = zeropadding0 + temp;
+	
+		if (fractionalPart[i] == '1')
+		{
+			string zeropadding(abs(1.*temp.length() - result.length()), '0');
+			if (temp.length() < result.length())
+			{
+				temp = temp + zeropadding;
+				result = SumOfTwoNumber(result, temp);
+				temp.erase(temp.length() - zeropadding.length(), zeropadding.length());
+			}
+			else
+			{
+				result = result + zeropadding;
+				result = SumOfTwoNumber(result, temp);
+			}
+			
 		}
 	}
 	return result;
