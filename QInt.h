@@ -16,14 +16,18 @@ public:
 	QINT BinToDec(string bit);
 	string BinToHex(string bit);
 	string DecToHex(QINT x);
-	/*const QINT operator+(const QINT&) const;
-	const QINT operator-(const QINT&) const;
-	const QINT operator*(const QINT&) const;
-	const QINT operator/(const QINT&) const;
-	bool operator<(const QINT&) const;
-	bool operator>(const QINT&) const;
-	bool operator==(const QINT&) const;
-	bool operator>=(const QINT&) const;
+	QINT operator+(QINT );
+	QINT operator-(QINT );
+	QINT operator*(QINT );
+	QINT operator%(QINT q2);
+	//const QINT operator/(const QINT&) const;
+	string ConvertDataToDec();
+	void ConvertDecToData(string number);
+
+	bool operator<(QINT );
+	bool operator>(QINT );
+	bool operator==(QINT );
+	/*bool operator>=(const QINT&) const;
 	bool operator<=(const QINT&) const;
 	bool operator=(const QINT&) const;*/
 	QINT operator&(const QINT& x);
@@ -35,5 +39,7 @@ public:
 	QINT operator<<(int x);		//dich trai 1
 	QINT operator<<(QINT x);	//dich trai 2
 	QINT ROL(int x);
+	QINT ROL(QINT x);
 	QINT ROR(int x);
+	QINT ROR(QINT x);
 };
