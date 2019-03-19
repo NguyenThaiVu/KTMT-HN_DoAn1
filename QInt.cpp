@@ -5,9 +5,9 @@ QINT::QINT()
 {
 	this->data[0] = this->data[1] = this->data[2] = this->data[3] = 0;
 }
+
 void QINT::ScanQInt()
 {
-	this->data[0] = this->data[1] = this->data[2] = this->data[3] = 0;
 	string number;
 	getline(cin >> ws, number);
 	//
@@ -44,7 +44,6 @@ void QINT::PrintQInt()
 			}
 		}
 	}
-
 	bool sign = 0;	//số dương
 	if (bin[0] == '1')	//số âm
 	{
@@ -59,7 +58,6 @@ void QINT::PrintQInt()
 	cout << result << endl;
 }
 
-/////////////////
 void QINT::DBit(QINT &x, string &bin)
 {
 	for (int i = 0; i < 128; i++)
@@ -110,28 +108,146 @@ QINT QINT::BinToDec(string bit)
 	return *this;
 }
 
-string QINT::DecToHex(QINT x)
+QINT QINT::operator&(const QINT& x)
 {
-	string bin, dec, hex;
-	DBit(x, bin);
-	dec = FromBinToDec(bin);
-	hex = FromDecToHex(dec);
-	return hex;
+	string bin, bin1, bin2;
+	QINT result;
+	//Đổi 2 số cần thực hiện phép toán AND sang dạng nhị phân
+	bin1 = DecToBin(*this);
+	bin2 = DecToBin(x);
+	cout << bin1.length() << " " << bin2.length() << endl;
+	cout << bin1 << endl << bin2 << endl;
+	//Tiến hành thực hiện phép toán AND theo từng bit từ trái sang phải
+	for (int i = 0; i < bin1.length(); i++)
+		bin += to_string((bin1[i] - '0')&(bin2[i] - '0'));
+	//Chuyển dãy bit sau khi thực hiện xong về lại dạng QINT
+	result = BinToDec(bin);
+	return result;
 }
-QINT QINT::BinToDecUnsigned(string bin)
+
+QINT QINT::operator|(const QINT& x)
 {
-	this->data[0] = this->data[1] = this->data[2] = this->data[3] = 0;
-	string dec;
-	dec = FromBinToUnsignedInt(bin);
-	BBit(*this, bin);
-	return *this;
+	string bin, bin1, bin2;
+	QINT result;
+	//Đổi 2 số cần thực hiện phép toán OR sang dạng nhị phân
+	bin1 = DecToBin(*this);
+	bin2 = DecToBin(x);
+	//Tiến hành thực hiện phép toán OR theo từng bit từ trái sang phải
+	for (int i = 0; i < bin1.length(); i++)
+		bin += to_string((bin1[i] - '0')|(bin2[i] - '0'));
+	//Chuyển dãy bit sau khi thực hiện xong về lại dạng QINT
+	result = BinToDec(bin);
+	return result;
 }
-string QINT::BinToHex(string bit)
+
+QINT QINT::operator^(const QINT& x)
 {
-	QINT x;
-	x.BinToDec(bit);
-	string hex;
-	x.BinToDecUnsigned(bit);
-	hex = DecToHex(x);
-	return hex;
+	string bin, bin1, bin2;
+	QINT result;
+	//Đổi 2 số cần thực hiện phép toán XOR sang dạng nhị phân
+	bin1 = DecToBin(*this);
+	bin2 = DecToBin(x);
+	//Tiến hành thực hiện phép toán XOR theo từng bit từ trái sang phải
+	for (int i = 0; i < bin1.length(); i++)
+		bin += to_string((bin1[i] - '0')^(bin2[i] - '0'));
+	//Chuyển dãy bit sau khi thực hiện xong về lại dạng QINT
+	result = BinToDec(bin);
+	return result;
+}
+
+QINT QINT::operator~()
+{
+	string tmp, bin;
+	QINT result;
+	//Đổi số cần thực hiện phép toán NOT sang dạng nhị phân
+	tmp = DecToBin(*this);
+	//Tiến hành thực hiện phép toán NOT theo từng bit từ trái sang phải
+	for (int i = 0; i < tmp.length(); i++)
+	{
+		if (tmp[i] == '0')
+			bin += "1";
+		else
+			bin += "0";
+	}
+	//Chuyển dãy bit sau khi thực hiện xong về lại dạng QINT
+	result = BinToDec(bin);
+	return result;
+}
+
+QINT QINT::operator>>(int x)
+{
+	if (x < 0 || x >= 128)
+		return QINT();
+	//Đổi số cần thực hiện phép >> sang dạng nhị phân
+	string bin = DecToBin(*this);
+	//Xóa x bit cuối
+	bin.erase(bin.length() - x, x);
+	//Thêm x bit 0 ở đầu
+	bin = string(x, '0') + bin;
+	return BinToDec(bin);
+}
+
+QINT QINT::operator>>(QINT x)
+{
+	//Còn phần so sanh x < 0 || x >= 128, đợi Vy viết hàm
+
+	//Đổi số cần thực hiện phép >> sang dạng nhị phân
+	string bin = DecToBin(*this);
+	//Xóa x bit cuối
+	bin.erase(bin.length() - x.data[3], x.data[3]); //Vì x trong trường hợp này < 128 nên x cũng chính là x.data[3]
+	//Thêm x bit 0 ở đầu
+	bin = string(x.data[3], '0') + bin; //Vì x trong trường hợp này < 128 nên x cũng chính là x.data[3]
+	return BinToDec(bin);
+}
+
+QINT QINT::operator<<(int x)
+{
+	if (x < 0 || x >= 128)
+		return QINT();
+	//Đổi số cần thực hiện phép << sang dạng nhị phân
+	string bin = DecToBin(*this);
+	//Xóa x bit đầu
+	bin.erase(0, x);
+	//Thêm x bit 0 ở cuối
+	bin = bin + string(x, '0');
+	return BinToDec(bin);
+}
+
+QINT QINT::operator<<(QINT x)
+{
+	//Còn phần so sanh x < 0 || x >= 128, đợi Vy viết hàm
+
+	//Đổi số cần thực hiện phép << sang dạng nhị phân
+	string bin = DecToBin(*this);
+	//Xóa x bit đầu
+	bin.erase(0, x.data[3]); //Vì x trong trường hợp này < 128 nên x cũng chính là x.data[3]
+	//Thêm x bit 0 ở cuối
+	bin = bin + string(x.data[3], '0'); //Vì x trong trường hợp này < 128 nên x cũng chính là x.data[3]
+	return BinToDec(bin);
+}
+
+QINT QINT::ROR(int x)
+{
+	//Đổi số cần thực hiện phép ROR sang dạng nhị phân
+	string bin = DecToBin(*this), tmp;
+	//Lưu x bit cuối vào tmp
+	tmp = string(bin, bin.length() - x, x);
+	//Xóa x bit cuối
+	bin.erase(bin.length() - x, x);
+	//Thêm các bit trong tmp vào đầu
+	bin = tmp + bin;
+	return BinToDec(bin);
+}
+
+QINT QINT::ROL(int x)
+{
+	//Đổi số cần thực hiện phép ROL sang dạng nhị phân
+	string bin = DecToBin(*this), tmp;
+	//Lưu x bit đầu vào tmp
+	tmp = string(bin, 0, x);
+	//Xóa x bit đầu
+	bin.erase(0, x);
+	//Thêm các bit trong tmp vào cuối
+	bin = bin + tmp;
+	return BinToDec(bin);
 }

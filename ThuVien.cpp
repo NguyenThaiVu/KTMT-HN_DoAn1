@@ -1,6 +1,6 @@
 ﻿#include"ThuVien.h"
 
-string DivideBy2(string number) //Trả về kết quả của chuỗi number/2
+string DivideBy2(string number)
 {
 	if (number == "0" || number == "1")
 		return "0";
@@ -53,7 +53,7 @@ string FromDecToBin(string number)
 		result = "0" + result;
 	}
 	//neu la so am, chuyen thanh so bu 2
-	if (sign == 1)
+	if (sign == 1)	
 	{
 		//chuyen bit 0->1 và 1->0
 		for (int i = 0; i < result.length(); i++)
@@ -76,7 +76,6 @@ string FromDecToBin(string number)
 			{
 				result[i] = '0';
 			}
-
 		}
 	}
 	return result;
@@ -150,7 +149,7 @@ string PowWithBase2(int n)	//2^n
 {
 	if (n == 0)
 		return "1";
-	string result = "2";	//base case 
+	string result="2";	//base case 
 	for (int i = 0; i < n - 1; i++)
 	{
 		result = MultipltWith2(result);
@@ -160,7 +159,7 @@ string PowWithBase2(int n)	//2^n
 
 string FromBinToDec(string bin)
 {
-	string result = "0";
+	string result = "";
 	if (bin[0] == '1')	//số âm
 	{
 		//trừ đi 1
@@ -171,7 +170,7 @@ string FromBinToDec(string bin)
 				bin[i] = '0';
 				break;
 			}
-			else if (bin[i] == '0' && bin[i - 1] == '0')
+			else if (bin[i] == '0' && bin[i-1]=='0')
 			{
 				bin[i] = '1';
 			}
@@ -198,114 +197,6 @@ string FromBinToDec(string bin)
 		{
 			result = SumOfTwoNumber(result, PowWithBase2(127 - i));
 		}
-	}
-	//// thêm dấu trừ nếu số âm
-	return result;
-}
-//////////////////////////////////////////
-string FromBinToUnsignedInt(string &bin)
-{
-	string result = "0";
-	int len = bin.length();
-	if (bin.length() < 128)
-	{
-		for (int i = 0; i < 128 - len; i++)
-			bin = "0" + bin;
-	}
-	for (int i = 0; i < bin.length(); i++)
-	{
-		if (bin[i] == '1')
-		{
-			result = SumOfTwoNumber(result, PowWithBase2(127 - i));
-		}
-	}
-	return result;
-}
-
-string Cut2Char(string dec)
-{
-	if (dec.length() < 2)
-	{
-		return dec;
-	}
-	string result = "00";
-	result[0] = dec[0];
-	result[1] = dec[1];
-	return result;
-}
-
-int FromStringToInt(string strNumber)
-{
-	int inNumber = 0;
-	for (int i = 0; i < strNumber.length(); i++)
-	{
-		inNumber = inNumber * 10 + (strNumber[i] - '0');
-	}
-	return inNumber;
-}
-
-string FromIntToString(int inNumber)
-{
-	string strNumber;
-	if (inNumber == 0) return "0";
-	while (inNumber != 0)
-	{
-		int r = inNumber % 10;
-		strNumber.push_back(r + '0');
-		inNumber = inNumber / 10;
-	}
-	reverse(strNumber.begin(), strNumber.end());
-	return strNumber;
-}
-
-string DivideBy16(string dec, string &remain)
-{
-	if ((dec.length() == 1) || (dec.length() == 2 && dec[1] - '0' < 6 && dec[0] == '1'))
-	{
-		remain = dec;
-		return "0";
-	}
-	string result;
-	int idx = 1;
-	int number = FromStringToInt(Cut2Char(dec));
-	if (dec.length() == 2)
-	{
-		result.push_back((number / 16) + '0');
-		remain = FromIntToString(number % 16);
-		return result;
-	}
-	while (idx != dec.length() - 1)
-	{
-		if (number < 16)
-			number = number * 10 + (dec[++idx] - '0');
-		result.push_back((number / 16) + '0');
-		number = number % 16;
-	}
-	remain = FromIntToString(number);
-	return result;
-}
-
-string FromDecToHex(string dec)
-{
-	string result = "", remain;
-	if (dec == "0")
-	{
-		result = "0";
-	}
-	while (dec != "0")
-	{
-		dec = DivideBy16(dec, remain);
-		if (remain.length() == 2)
-		{
-			string flag = "A";
-			for (int i = 0; i < 6; i++)
-			{
-				if (remain[1] - '0' == i) break;
-				flag = flag[0] + 1;
-			}
-			remain = flag;
-		}
-		result = remain + result;
 	}
 	return result;
 }
