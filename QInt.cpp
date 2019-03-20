@@ -90,31 +90,48 @@ void QINT::BBit(QINT &x, string &bin)
 		}
 	}
 }
-string QINT::DecToBin(QINT x)
+bool* QINT::DecToBin(QINT x)
 {
+	bool* bit = new bool[128];
 	string bin;
 	DBit(x, bin);
-	return bin;
+	for (int i = 0; i < 128; i++)
+	{
+		if (bin[i] == '0') bit[i] = false;
+		else bit[i] = true;
+	}
+	return bit;
 }
-QINT QINT::BinToDec(string bit)
+QINT QINT::BinToDec(bool* bin)
 {
 	this->data[0] = this->data[1] = this->data[2] = this->data[3] = 0;
+	string bit = "";
+	for (int i = 0; i < LengthBool(bin); i++)
+	{
+		if (bin[i] == true) bit = bit + "1";
+		else bit = bit + "0";
+	}
 	int len = bit.length();
-	if (bit.length() < 128)
+	if (len < 128)
 	{
 		for (int i = 0; i < 128 - len; i++)
-			bit = bit[0] + bit;
+			bit = "0" + bit;
 	}
 	BBit(*this, bit);
 	return *this;
 }
 
-string QINT::DecToHex(QINT x)
+char* QINT::DecToHex(QINT x)
 {
-	string bin, dec, hex;
+	string bin, dec, strHex;
 	DBit(x, bin);
 	dec = FromBinToDec(bin);
-	hex = FromDecToHex(dec);
+	strHex = FromDecToHex(dec);
+	int len = strHex.length();
+	char* hex = new char[len];
+	for (int i = 0; i < strHex.length(); i++)
+		hex[i] = strHex[i];
+	hex[len] = '\0';
 	return hex;
 }
 QINT QINT::BinToDecUnsigned(string bin)
@@ -125,12 +142,18 @@ QINT QINT::BinToDecUnsigned(string bin)
 	BBit(*this, bin);
 	return *this;
 }
-string QINT::BinToHex(string bit)
+char* QINT::BinToHex(bool* bit)
 {
 	QINT x;
 	x.BinToDec(bit);
-	string hex;
-	x.BinToDecUnsigned(bit);
+	string bin = "";
+	for (int i = 0; i < LengthBool(bit); i++)
+	{
+		if (bit[i] == true) bin = bin + "1";
+		else bin = bin + "0";
+	}
+	x.BinToDecUnsigned(bin);
+	char* hex = new char[bin.length()];
 	hex = DecToHex(x);
 	return hex;
 }

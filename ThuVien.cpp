@@ -203,6 +203,13 @@ string FromBinToDec(string bin)
 	return result;
 }
 //////////////////////////////////////////
+int LengthBool(bool* bit)
+{
+	int len = 0;
+	while (bit[len] == true || bit[len] == false)
+		len++;
+	return len;
+}
 string BinUnsigned(string &bin)
 {
 	string result = "";

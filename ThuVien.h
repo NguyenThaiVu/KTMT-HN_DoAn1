@@ -9,6 +9,7 @@ string SumOfTwoNumber(string str1, string str2);
 string PowWithBase2(int n);	//2^n
 string FromBinToDec(string Bin);
 //////
+int LengthBool(bool* bit);
 string BinUnsigned(string &bin);
 string Cut2Char(string dec);
 int StringToInt(string strNumber);

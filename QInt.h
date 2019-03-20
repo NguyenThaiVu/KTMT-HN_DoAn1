@@ -10,11 +10,11 @@ public:
 	QINT();
 	void ScanQInt();
 	void PrintQInt();
-	string DecToBin(QINT x);
-	QINT BinToDec(string bit);
-	string BinToHex(string bit);
+	bool* DecToBin(QINT x);
+	QINT BinToDec(bool* bin);
+	char* BinToHex(bool* bit);
 	QINT BinToDecUnsigned(string bit);
-	string DecToHex(QINT x);
+	char* DecToHex(QINT x);
 	const QINT operator+(const QINT&) const;
 	const QINT operator-(const QINT&) const;
 	const QINT operator*(const QINT&) const;
