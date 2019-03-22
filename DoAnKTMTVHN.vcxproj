@@ -118,11 +118,14 @@
     <ClInclude Include="QFloat.h" />
     <ClInclude Include="QInt.h" />
     <ClInclude Include="ThuVien.h" />
+    <ClInclude Include="XuLyFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="QFloat.cpp" />
     <ClCompile Include="QInt.cpp" />
     <ClCompile Include="ThuVien.cpp" />
+    <ClCompile Include="XuLyFile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
