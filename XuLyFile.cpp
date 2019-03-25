@@ -96,7 +96,8 @@ void XuLyToanTuMotNgoi(ifstream & fileIn, ofstream & fileOut, string p1, string 
 		bin = HexToBin(p3);
 		a.BinToDec_String(bin);
 		a = ~a;
-		hex = a.DecToHex_String(a);
+		bin = a.DecToBin_String(a);
+		hex = BinToHex(bin);
 		fileOut << hex << endl;
 	}
 	else if (p1 == "10")
@@ -124,16 +125,16 @@ void XuLyToanTuHaiNgoi(ifstream & fileIn, ofstream & fileOut, string p1, string 
 			c = a * b;
 		else if (p3 == "/")
 			c = a / b;
-		else if (p3 == ">")
+		else if (p3 == "<")
 		{
-			if (a > b)
+			if (a < b)
 				c.ConvertDecToData("1");
 			else
 				c.ConvertDecToData("0");
 		}
-		else if (p3 == "<")
+		else if (p3 == ">")
 		{
-			if (a < b)
+			if (a > b)
 				c.ConvertDecToData("1");
 			else
 				c.ConvertDecToData("0");
@@ -166,13 +167,25 @@ void XuLyToanTuHaiNgoi(ifstream & fileIn, ofstream & fileOut, string p1, string 
 		else if (p3 == "^")
 			c = a ^ b;
 		else if (p3 == ">>")
+		{
+			b.ConvertDecToData(p4);
 			c = a >> b;
+		}
 		else if (p3 == "<<")
+		{
+			b.ConvertDecToData(p4);
 			c = a << b;
+		}
 		else if (p3 == "ror" || p3 == "ROR")
+		{
+			b.ConvertDecToData(p4);
 			c = a.ROR(b);
+		}
 		else if (p3 == "rol" || p3 == "ROL")
+		{
+			b.ConvertDecToData(p4);
 			c = a.ROL(b);
+		}
 		string bin;
 		bin = c.DecToBin_String(c);
 		fileOut << bin << endl;

@@ -1,26 +1,5 @@
 ﻿#include"ThuVien.h"
 
-string DivideBy2(string number) //Trả về kết quả của chuỗi number/2
-{
-	if (number == "0" || number == "1")
-		return "0";
-	string ans;
-	int idx = 0;
-	int temp = number[idx] - '0';
-	while (temp < 2)
-	{
-		temp = temp * 10 + (number[++idx] - '0');
-	}
-	while (number.size() > idx)
-	{
-		ans += (temp / 2) + '0';
-		temp = (temp % 2) * 10 + number[++idx] - '0';
-	}
-	if (ans.length() == 0)
-		return "0";
-	return ans;
-}
-
 string FromDecToBin(string number)
 {
 	bool sign = 0;	//dau +
@@ -32,7 +11,7 @@ string FromDecToBin(string number)
 	string result = "";
 	if (number == "0")
 	{
-		return "0";
+		return string(128, '0');
 	}
 	int temp;
 	while (number != "0")
@@ -44,9 +23,8 @@ string FromDecToBin(string number)
 		}
 		else
 			result = "1" + result;
-		number = DivideBy2(number);
+		number = Division(number, "2");
 	}
-	//
 	int n = result.length();
 	for (int i = 128; i > n; i--)
 	{
@@ -82,70 +60,6 @@ string FromDecToBin(string number)
 	return result;
 }
 
-string MultipltWith2(string number)
-{
-	string result;
-	if (number == "0")
-	{
-		return "0";
-	}
-	int temp, remain = 0;
-	for (int i = number.length() - 1; i >= 0; i--)
-	{
-		temp = number[i] - '0';
-		temp = temp * 2 + remain;
-		remain = 0;
-		if (temp >= 10)
-		{
-			temp = temp - 10;
-			remain = 1;
-		}
-		result = (char)(temp + '0') + result;
-	}
-	if (remain == 1)
-	{
-		result = "1" + result;
-	}
-	return result;
-}
-
-string SumOfTwoNumber(string str1, string str2)
-{
-	if (str1.length() > str2.length())
-		swap(str1, str2);
-	string result = "";
-	int n1 = str1.length(), n2 = str2.length();
-
-	// đảo ngược 2 chuỗi số 
-	reverse(str1.begin(), str1.end());
-	reverse(str2.begin(), str2.end());
-
-	int carry = 0;
-	for (int i = 0; i < n1; i++)
-	{
-		int sum = ((str1[i] - '0') + (str2[i] - '0') + carry);
-		result.push_back(sum % 10 + '0');
-		carry = sum / 10;
-	}
-
-	// Cộng phần còn lại của số lớn hơn ( str2)
-	for (int i = n1; i < n2; i++)
-	{
-		int sum = ((str2[i] - '0') + carry);
-		result.push_back(sum % 10 + '0');
-		carry = sum / 10;
-	}
-
-	// Cộng phần dư
-	if (carry)
-		result.push_back(carry + '0');
-
-	// Đảo ngược chuỗi kết quả
-	reverse(result.begin(), result.end());
-
-	return result;
-}
-
 string PowWithBase2(int n)	//2^n
 {
 	if (n == 0)
@@ -153,7 +67,7 @@ string PowWithBase2(int n)	//2^n
 	string result = "2";	//base case 
 	for (int i = 0; i < n - 1; i++)
 	{
-		result = MultipltWith2(result);
+		result = MultiplyWithSmallNum(result, 2);
 	}
 	return result;
 }
@@ -196,29 +110,10 @@ string FromBinToDec(string bin)
 	{
 		if (bin[i] == '1')
 		{
-			result = SumOfTwoNumber(result, PowWithBase2(127 - i));
+			result = SumOfTwoNumbers(result, PowWithBase2(127 - i));
 		}
 	}
 	//// thêm dấu trừ nếu số âm
-	return result;
-}
-//////////////////////////////////////////
-string FromBinToUnsignedInt(string &bin)
-{
-	string result = "0";
-	int len = bin.length();
-	if (bin.length() < 128)
-	{
-		for (int i = 0; i < 128 - len; i++)
-			bin = "0" + bin;
-	}
-	for (int i = 0; i < bin.length(); i++)
-	{
-		if (bin[i] == '1')
-		{
-			result = SumOfTwoNumber(result, PowWithBase2(127 - i));
-		}
-	}
 	return result;
 }
 
@@ -320,7 +215,7 @@ int StringToNum(char c)
 	return c - '0';
 }
 
-bool CheckSign(string &s) 
+bool CheckSign(string s) 
 {
 	if (s[0] == '-') return 1;
 	else return 0;
@@ -328,6 +223,22 @@ bool CheckSign(string &s)
 
 bool CompareUnsignedInt(string s1, string s2) //so sanh 2 chuoi co do dai bang nhau
 { 
+	//xóa những số 0 ở đầu dãy số
+	if (s1[0] == '0')
+	{
+		while (s1[0] == 0)
+		{
+			s1.erase(s1.begin());
+		}
+	}
+	if (s2[0] == '0')
+	{
+		while (s2[0] == 0)
+		{
+			s2.erase(s2.begin());
+		}
+	}
+	//
 	if (s1.length() > s2.length())
 		return 1;
 	if (s1.length() < s2.length())
@@ -340,7 +251,7 @@ bool CompareUnsignedInt(string s1, string s2) //so sanh 2 chuoi co do dai bang n
 	return 1;
 }
 
-string Plus(string s1, string s2) 
+string SumOfTwoNumbers(string s1, string s2) 
 {
 	TheSameLength(s1, s2);
 
@@ -348,7 +259,8 @@ string Plus(string s1, string s2)
 	int l = s1.length();
 
 	int temp = 0;
-	for (int i = l - 1; i >= 0; i--) { //cong tu phai sang trai
+	for (int i = l - 1; i >= 0; i--) //cong tu phai sang trai
+	{ 
 		temp = StringToNum(s1[i]) + StringToNum(s2[i]) + temp; //cong 2 so lai va cong them phan nguyen cua 10
 		result.insert(0, 1, NumToString(temp % 10)); //lay phan du cua 10
 		temp = temp / 10; //nho phan nguyen cua 10(hay con goi la nho 1)
@@ -357,7 +269,7 @@ string Plus(string s1, string s2)
 	return result;
 }
 
-string Minus(string s1, string s2) 
+string SubtractionOfTwoNumbers(string s1, string s2) 
 {
 	int temp = 0;
 	int sign;
@@ -415,7 +327,7 @@ string MultiplyWithBigNum(string s1, string s2)
 	{
 		string temp = MultiplyWithSmallNum(s1, StringToNum(s2[i])); //tinh tung so cua s2 nhan voi ca chuoi s1
 		temp.insert(temp.length(), j, '0'); //them so j lan so 0 vao cuoi chuoi moi lan tinh de duoc cai thap
-		result = Plus(result, temp); //cong lai
+		result = SumOfTwoNumbers(result, temp); //cong lai
 		j++;
 	}
 	while ((result[0] == '0') && (result.length() > 1)) result.erase(0, 1);
@@ -423,37 +335,26 @@ string MultiplyWithBigNum(string s1, string s2)
 }
 
 void TheSameLength(string &s1, string &s2) 
-{//Ham lam cho do dai 2 chuoi bang chuoibang nhau bang cach them so khong vao dau
+{
+	
 	int l1 = s1.length(), l2 = s2.length();
-	if (l1 > l2) { //neu l1 > l2 thi them (l1-l2) so 0 vao dau chuoi s2
-		for (int i = l2; i < l1; i++) {
+	if (l1 > l2) //neu l1 > l2 thi them (l1-l2) so 0 vao dau chuoi s2
+	{ 
+		for (int i = l2; i < l1; i++) 
+		{
 			s2.insert(0, 1, '0');
 		}
 	}
-	else {
-		for (int i = l1; i < l2; i++) { //nguoc lai
+	else 
+	{
+		for (int i = l1; i < l2; i++) 
+		{ 
 			s1.insert(0, 1, '0');
 		}
 	}
 }
 
 //*************** for QFloat
-
-string MultiplyBignumWithSmallnum(string bignum, int smallnum)
-{
-	string c;
-	int carry = 0, s;
-	for (int i = bignum.length() - 1; i >= 0; i--)
-	{
-		s = (bignum[i] - 48)*smallnum + carry;
-		carry = s / 10;
-		c = (char)(s % 10 + 48) + c;
-	}
-	string temp;
-	if (carry > 0)
-		temp = to_string(carry);
-	return temp + c;
-}
 
 string ConvertFractionalPart_FromDecToBin(string number)
 {
@@ -464,13 +365,13 @@ string ConvertFractionalPart_FromDecToBin(string number)
 		if (number[0] >= '5')
 		{
 			result = result + '1';
-			number = MultipltWith2(number);
+			number = MultiplyWithSmallNum(number, 2);
 			number.erase(0, 1);// xóa số 1 đầu chuỗi
 		}
 		else
 		{
 			result = result + '0';
-			number = MultipltWith2(number);
+			number = MultiplyWithSmallNum(number, 2);
 		}
 
 		// giới hạn Max Lenght cho chuỗi nhị phân chứa phần thập phân.		
@@ -526,7 +427,7 @@ string BinToDec_Of_FractionalPart(string fractionalPart)
 	for (int i = 0; i < fractionalPart.length(); i++)
 	{
 		int exp = -(i + 1);
-		temp = MultiplyBignumWithSmallnum(temp, 5);
+		temp = MultiplyWithSmallNum(temp, 5);
 
 		string zeropadding0(-exp - temp.length(), '0');
 		temp = zeropadding0 + temp;
@@ -537,13 +438,13 @@ string BinToDec_Of_FractionalPart(string fractionalPart)
 			if (temp.length() < result.length())
 			{
 				temp = temp + zeropadding;
-				result = SumOfTwoNumber(result, temp);
+				result = SumOfTwoNumbers(result, temp);
 				temp.erase(temp.length() - zeropadding.length(), zeropadding.length());
 			}
 			else
 			{
 				result = result + zeropadding;
-				result = SumOfTwoNumber(result, temp);
+				result = SumOfTwoNumbers(result, temp);
 			}
 
 		}
@@ -554,23 +455,28 @@ string BinToDec_Of_FractionalPart(string fractionalPart)
 string Division(string s1, string s2) 
 {
 	string result;
-	string temp;
+	string temp = "0";
 	int l1 = s1.length();
 	int l2 = s2.length();
 
 	if (s2 == "0") return "Syntax Error!"; //TH mau bang 0
 	if (l1 < l2) return "0"; //TH so bi chia co do dai nho hon so chia thi tra ra 0
-	for (int i = 0; i < l1; i++) { //xet tu trai sang phai
-		if (temp[0] == '0') { //neu temp = 0 thi xoa temp va them so ke tiep vao temp
+	for (int i = 0; i < l1; i++)//xet tu trai sang phai
+	{ 
+		if (temp[0] == '0') //neu temp = 0 thi xoa temp va them so ke tiep vao temp
+		{ 
 			temp.erase(0, 1);
 			temp.insert(0, 1, s1[i]);
 		}
 		else temp.insert(temp.length(), 1, s1[i]); //khong thi them so ke tiep vao temp
-		if (CompareUnsignedInt(temp, s2) == 1) { //neu temp lon hon hoac bang s2 thi xet tiep
-			for (int j = 1; j < 10; j++) { //duyet vong for nhan temp voi j de tim so gan nhat nho hon temp va chia het cho s2
-				if (CompareUnsignedInt(temp, MultiplyWithSmallNum(s2, j)) == 0) { //neu temp < s2*j thi ngung
+		if (CompareUnsignedInt(temp, s2) == 1) //neu temp lon hon hoac bang s2 thi xet tiep
+		{ 
+			for (int j = 1; j <= 10; j++) // nhan temp voi j de tim so gan nhat nho hon temp va chia het cho s2
+			{ 
+				if (CompareUnsignedInt(temp, MultiplyWithSmallNum(s2, j)) == 0) //neu temp < s2*j thi ngung
+				{ 
 					result.insert(result.length(), 1, NumToString(j - 1)); //tim duoc temp/s2 thi luu vao result
-					temp = Minus(temp, MultiplyWithSmallNum(s2, j - 1)); //temp = temp%(s2*j), tuc la phan du
+					temp = SubtractionOfTwoNumbers(temp, MultiplyWithSmallNum(s2, j - 1)); //temp = temp%(s2*j), tuc la phan du
 					break;
 				}
 			}
@@ -585,7 +491,7 @@ string Modulo(string s1, string s2)
 {
 	string result;
 	if (s2 == "0") return "Syntax Error!";
-	result = Minus(s1, MultiplyWithBigNum(s2, Division(s1, s2))); //phan du se bang s1 - s2*(s1/s2))
+	result = SubtractionOfTwoNumbers(s1, MultiplyWithBigNum(s2, Division(s1, s2))); //phan du se bang s1 - s2*(s1/s2))
 	return result;
 }
 
@@ -595,7 +501,8 @@ string HexToBin(string hex)
 	long int i = 0;
 	while (hex[i]) {
 
-		switch (hex[i]) {
+		switch (hex[i]) 
+		{
 		case '0':
 			bin += "0000";
 			break;
@@ -656,6 +563,83 @@ string HexToBin(string hex)
 		i++;
 	}
 	return bin;
+}
+
+string BinToHex(string bin)
+{
+	string hex;
+	string temp;
+	while (bin.length() >= 4)
+	{
+		temp = "";
+		temp.push_back(bin[bin.length() - 1]);
+		bin.erase(bin.end() - 1);
+		temp.push_back(bin[bin.length() - 1]);
+		bin.erase(bin.end() - 1);
+		temp.push_back(bin[bin.length() - 1]);
+		bin.erase(bin.end() - 1);
+		temp.push_back(bin[bin.length() - 1]);
+		bin.erase(bin.end() - 1);
+		reverse(temp.begin(), temp.end());
+		if (temp == "0000")
+			hex = hex + '0';
+		else if (temp == "0001")
+			hex = hex + '1';
+		else if (temp == "0010")
+			hex = hex + '2';
+		else if (temp == "0011")
+			hex = hex + '3';
+		else if (temp == "0100")
+			hex = hex + '4';
+		else if (temp == "0101")
+			hex = hex + '5';
+		else if (temp == "0110")
+			hex = hex + '6';
+		else if (temp == "0111")
+			hex = hex + '7';
+		else if (temp == "1000")
+			hex = hex + '8';
+		else if (temp == "1001")
+			hex = hex + '9';
+		else if (temp == "1010")
+			hex = hex + 'A';
+		else if (temp == "1011")
+			hex = hex + 'B';
+		else if (temp == "1100")
+			hex = hex + 'C';
+		else if (temp == "1101")
+			hex = hex + 'D';
+		else if (temp == "1110")
+			hex = hex + 'E';
+		else if (temp == "1111")
+			hex = hex + 'F';
+	}
+	//phần dư còn lại
+	temp = "";
+	while (bin.length() > 0)
+	{
+		temp.push_back(bin[bin.length() - 1]);
+		bin.erase(bin.end() - 1);
+	}
+	reverse(temp.begin(), temp.end());
+	if (temp == "0" || temp == "00" || temp == "000")
+		hex = hex + '0';
+	else if (temp == "1" || temp == "01" || temp == "001")
+		hex = hex + '1';
+	else if (temp == "10" || temp == "010")
+		hex = hex + '2';
+	else if (temp == "11" || temp == "011")
+		hex = hex + '3';
+	else if (temp == "100")
+		hex = hex + '4';
+	else if (temp == "101")
+		hex = hex + '5';
+	else if (temp == "110")
+		hex = hex + '6';
+	else  if (temp == "111")
+		hex = hex + '7';
+	reverse(hex.begin(), hex.end());
+	return hex;
 }
 
 int LengthBool(bool* bit)

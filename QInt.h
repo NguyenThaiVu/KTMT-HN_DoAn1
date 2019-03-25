@@ -11,19 +11,20 @@ private:
 	unsigned int data[4];
 public:
 	QINT();
-	string ConvertDataToDec();
-	void ConvertDecToData(string);
+	string ConvertDataToDec();	//Hàm trả về chuỗi thập phân mà QINT đang giữ
+	void ConvertDecToData(string);	//Hàm chuyển từ số thập phân (dạng chuỗi) vào data
 	void ScanQInt();
 	void PrintQInt();
-	string DecToBin_String(QINT x);		//hàm hỗ trợ 
-	QINT BinToDec_String(string bit);	//hàm hỗ trợ
-	string BinToHex_String(string bit);	//hàm hỗ trợ
-	bool* DecToBin(QINT x);
-	QINT BinToDec(bool* bin);
-	char* BinToHex(bool* bit);
-	char* DecToHex(QINT x);
-	QINT BinToDecUnsigned(string bit);
-	string DecToHex_String(QINT x);
+	void DocBit(QINT &x, string &bin);	//Hàm đọc bit từ QINT và trả vào chuỗi bin
+	void BatBit(QINT &x, string &bin);	//Hàm bật bit QINT (đọc từ chuỗi bin)
+	string DecToBin_String(QINT x);		//Hàm chuyển từ số QINT sang số nhị phân (dạng chuỗi)
+	QINT BinToDec_String(string bit);	//Hàm chuyển từ số nhị phân (dạng chuỗi) và trả về kiểu QINT
+	string BinToHex_String(string bit);	//Hàm chuyển từ số nhị phân (dạng chuỗi) sang số thập phân kiểu Hex (chuỗi)
+	string DecToHex_String(QINT x);		//Hàm chuyển từ QINT sang Hex (dạng chuỗi)
+	bool* DecToBin(QINT x);			//Hàm chuyển từ số QINT sang số nhị phân (bool*)
+	QINT BinToDec(bool* bin);		//Hàm chuyển từ số nhị phân (bool*) và trả về kiểu QINT
+	char* BinToHex(bool* bit);		//Hàm chuyển từ số nhị phân (bool*) sang số thập phân kiểu Hex (chuỗi)
+	char* DecToHex(QINT x);			//Hàm chuyển từ QINT sang Hex (dạng chuỗi)
 	QINT operator+(QINT);
 	QINT operator-(QINT);
 	QINT operator*(QINT);
@@ -47,7 +48,5 @@ public:
 	QINT ROR(QINT x);
 	QINT ROL(int x);
 	QINT ROL(QINT x);
-	void DocBit(QINT &x, string &bin);
-	void BatBit(QINT &x, string &bin);
 };
 #endif // !_QInt_H_

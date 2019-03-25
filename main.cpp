@@ -25,7 +25,6 @@ int main()
 		else
 			cout << "Nhap sai, moi nhap lai" << endl;
 	}
-	
 	system("pause");
 	return 0;
 }

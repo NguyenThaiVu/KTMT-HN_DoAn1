@@ -8,12 +8,8 @@ QINT::QINT()
 string QINT::ConvertDataToDec()
 {
 	//chuyen tu data[4] thành mã nhi phân 
-	string bin;
-	for (int i = 0; i < 128; i++)
-	{
-		bin = bin + '0';
-	}
-	//d?c bit
+	string bin(128, '0');
+	//doc bit
 	bool bit;
 	for (int i = 0; i < 4; i++)
 	{
@@ -66,12 +62,14 @@ void QINT::PrintQInt()
 	cout << result << endl;
 }
 
-/////////////////
 void QINT::DocBit(QINT &x, string &bin)
 {
-	for (int i = 0; i < 128; i++)
+	if (bin.length() < 128)
 	{
-		bin = bin + '0';
+		for (int i = bin.length(); i < 128; i++)
+		{
+			bin = bin + '0';
+		}
 	}
 	//đọc bit
 	bool bit;
@@ -87,6 +85,7 @@ void QINT::DocBit(QINT &x, string &bin)
 		}
 	}
 }
+
 void QINT::BatBit(QINT &x, string &bin)
 {
 	for (int i = 0; i < bin.length(); i++)
@@ -103,7 +102,7 @@ string QINT::DecToBin_String(QINT x)
 	string bin;
 	DocBit(x, bin);
 	//xóa những số 0 dư thừa phía trước
-	while (bin[0] == '0')
+	while (bin[0] == '0' && bin.length() > 1)
 	{
 		bin.erase(bin.begin());
 	}
@@ -131,21 +130,11 @@ string QINT::DecToHex_String(QINT x)
 	return hex;
 }
 
-QINT QINT::BinToDecUnsigned(string bin)
-{
-	this->data[0] = this->data[1] = this->data[2] = this->data[3] = 0;
-	string dec;
-	dec = FromBinToUnsignedInt(bin);
-	BatBit(*this, bin);
-	return *this;
-}
-
 string QINT::BinToHex_String(string bit)
 {
 	QINT x;
 	x.BinToDec_String(bit);
 	string hex;
-	x.BinToDecUnsigned(bit);
 	hex = DecToHex_String(x);
 	return hex;
 }
@@ -205,7 +194,7 @@ char * QINT::BinToHex(bool * bit)
 		if (bit[i] == true) bin = bin + "1";
 		else bin = bin + "0";
 	}
-	x.BinToDecUnsigned(bin);
+	x.BinToDec_String(bin);
 	char* hex = new char[bin.length()];
 	hex = DecToHex(x);
 	return hex;
@@ -220,12 +209,12 @@ QINT QINT::operator+(QINT q2)
 	string s1 = this->ConvertDataToDec();
 	string s2 = q2.ConvertDataToDec();
 	if ((CheckSign(s1) == 0) && (CheckSign(s2) == 0)) { //TH 2 so duong thi cong lai
-		number = Plus(s1, s2);
+		number = SumOfTwoNumbers(s1, s2);
 	}
 	else if ((CheckSign(s1) == 1) && (CheckSign(s2) == 1)) { //TH 2 so deu am thi xoa dau roi cong lai
 		s1.erase(0, 1);
 		s2.erase(0, 1);
-		number = Plus(s1, s2);
+		number = SumOfTwoNumbers(s1, s2);
 		number.insert(0, 1, '-'); //sau do them dau '-' vao ket qua
 	}
 	else {
@@ -234,7 +223,7 @@ QINT QINT::operator+(QINT q2)
 			swap(s1, s2); //doi vi tri va xem nhu s2 - s1
 		}
 		else s2.erase(0, 1); //TH s1 duong va s2 am thi tru nhau
-		number = Minus(s1, s2);
+		number = SubtractionOfTwoNumbers(s1, s2);
 	}
 	q3.ConvertDecToData(number);
 	return q3;
@@ -249,11 +238,11 @@ QINT QINT::operator-(QINT q2) {
 
 	if ((CheckSign(s1) == 0) && (CheckSign(s2) == 1)) { //TH s1 duong va s2 am thi xoa dau s2 va cong lai
 		s2.erase(0, 1);
-		number = Plus(s1, s2);
+		number = SumOfTwoNumbers(s1, s2);
 	}
 	else if ((CheckSign(s1) == 1) && (CheckSign(s2) == 0)) { //TH s1 am va s2 duong thi xoa dau s1 va cong lai
 		s1.erase(0, 1);
-		number = Plus(s1, s2);
+		number = SumOfTwoNumbers(s1, s2);
 		number.insert(0, 1, '-'); //them dau '-' vao ket qua
 	}
 	else {
@@ -262,7 +251,7 @@ QINT QINT::operator-(QINT q2) {
 			s2.erase(0, 1);
 			swap(s1, s2); //doi vi tri va xem nhu s2 - s1
 		}
-		number = Minus(s1, s2); //tru nhau
+		number = SubtractionOfTwoNumbers(s1, s2); //tru nhau
 	}
 	q3.ConvertDecToData(number);
 	return q3;
@@ -371,14 +360,16 @@ QINT QINT::operator%(QINT q2) {
 	return q3;
 }
 
-bool QINT::operator<(QINT q2) {
+bool QINT::operator<(QINT q2) 
+{
 	QINT temp = *this;
 	temp = temp - q2;
 	if (temp.ConvertDataToDec() < "0") return true;
 	else return false;
 }
 
-bool QINT::operator>(QINT q2) {
+bool QINT::operator>(QINT q2) 
+{
 	QINT temp = *this;
 	temp = temp - q2;
 	if (temp.ConvertDataToDec() > "0") return true;

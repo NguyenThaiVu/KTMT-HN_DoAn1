@@ -16,9 +16,9 @@ public:
 	QFLOAT BinToDec(bool* bit);
 	bool* DecToBin();
 	//hàm phụ
-	QFLOAT BinToDec_String(string _128bit);
-	string DecToBin_String();
-	string GetQFloat();
-	string GetBin(string number);
+	QFLOAT BinToDec_String(string _128bit);	//Hàm chuyển từ dãy nhị phân (dạng chuỗi) sang QFLOAT
+	string DecToBin_String();	//Hàm chuyển từ QFLOAT sang dãy nhị phân
+	string GetQFloat();	//Hàm chuyển từ QFLOAT sang số thập phân (dạng chuỗi)
+	string GetBin(string number);	//Hàm chuyển từ số thập phân dạng chuỗi sang nhị phân
 };
 #endif // !_QInt_H_
